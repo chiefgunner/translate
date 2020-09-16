@@ -182,6 +182,30 @@ class Index extends BaseController
 
         return Re::success(['baidu'=>$data,'list'=>$list,]);
     }
+    public function fanyi()
+    {
+        $q = input('q','','trim');
+        $appid = env('baidu.appid');
+        $salt = rand(100000,999999);
+        $secret = env('baidu.secret');
+        $data = [
+            'q'=>$q,
+            'from'=>'en',
+            'to'=>'zh',
+            'appid'=>$appid,
+            'salt'=>$salt,
+            'sign'=>md5( $appid . $q . $salt . $secret )
+        ];
+        $url = "https://fanyi-api.baidu.com/api/trans/vip/translate";
+        $data = $this->curl_post($url,$data);
+        $data = json_decode($data,true);
+
+        if(! isset($data['error_code'])){
+            return Re::success($data['trans_result']);
+        }else{
+            return Re::error($data['error_msg']);
+        }
+    }
     public function goods()
     {
         $goods = Goods::select();
