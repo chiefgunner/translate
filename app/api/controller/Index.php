@@ -157,8 +157,11 @@ class Index extends BaseController
             }else{
                 if(is_numeric($val)){
                     $n[] = $val;
-                }else if( is_numeric(preg_replace('/\D/','',$val)) && preg_match('/^\d+\D+$/',$val) ){
-                    $n[] = preg_replace('/\D/','',$val);
+                }else if( is_numeric(preg_replace('/\D/','',$val)) ){
+                    //preg_match('/^\d+\D+$/',$val)
+                    //$n[] = preg_replace('/\D/','',$val);
+                    preg_match_all('/\d+/',$val,$all);
+                    $n = array_merge($n,$all[0]);
                 }
             }
         }
